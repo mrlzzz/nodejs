@@ -1,0 +1,10 @@
+.col-4 {
+    border: 1px solid black;
+}
+body {
+    background-color:cadetblue;
+}
+.container {   
+    margin-top: 100px;
+    background-color: antiquewhite;
+}
