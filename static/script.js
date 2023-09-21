@@ -1,5 +1,7 @@
 const BUTTONS = document.getElementsByClassName("btn");
 const QUESTION_FIELD = document.getElementById("question");
+const POINTS = document.getElementById("player-points");
+const MISTAKES = document.getElementById("player-mistakes");
 
 let db = {
     apple: "jablko",
@@ -113,7 +115,9 @@ function generate(gameContent) {
     const randomKey = generateRandomKey();
     let unshuffledAnswers = [];
 
+    // Reset answers count
     gameContent.answers = [];
+
     gameContent.question = randomKey;
 
     unshuffledAnswers.push(db[randomKey]);
@@ -124,11 +128,16 @@ function generate(gameContent) {
     gameContent.answers = shuffle(unshuffledAnswers);
 
     QUESTION_FIELD.textContent = gameContent.question;
-    let i = 0;
 
+    // Assign possible values to answers
+    let i = 0;
     for (const button of BUTTONS) {
         button.textContent = gameContent.answers[i++];
     }
+
+    // Assing the number of player points and mistakes
+    console.log(gameContent.playerPoints);
+    POINTS.textContent = gameContent.playerPoints;
 
     console.log(gameContent);
 
@@ -156,6 +165,8 @@ function checkAnswer(buttons, db, gameState) {
                 generate(gameState);
             } else {
                 console.log("los");
+                gameState.playerMistakes++;
+                MISTAKES.textContent = gameState.playerMistakes;
             }
         });
     }
@@ -168,6 +179,7 @@ function main(db) {
         question: "",
         answers: [],
         playerPoints: 0,
+        playerMistakes: 0,
     };
 
     let gameState = generate(initGameState);
