@@ -16,42 +16,70 @@
         <title>Hello, world!</title>
     </head>
     <body>
-        <div class="container col-6 p-4">
-            <div class="row justify-content-center">
-                <div class="col-auto display-1 m-5" id="question">Question</div>
-            </div>
-            <div class="row justify-content-around m-4">
-                <button
-                    type="button"
-                    class="btn btn-primary btn-lg btn-block col-4"
-                >
-                    Answer 1
-                </button>
-                <button
-                    type="button"
-                    class="btn btn-primary btn-lg btn-block col-4"
-                >
-                    Answer 2
+        <!-- The following div had "container" class-->
+        <div class="" id="game-container">
+            <div
+                class="container h-100"
+                style="display: flex"
+                id="start-screen"
+            >
+                <button class="btn btn-primary mx-auto my-auto" id="start-btn">
+                    Go game!
                 </button>
             </div>
-            <div class="row justify-content-around m-4">
-                <button
-                    type="button"
-                    class="btn btn-primary btn-lg btn-block col-4"
-                >
-                    Answer 3
-                </button>
-                <button
-                    type="button"
-                    class="btn btn-primary btn-lg btn-block col-4"
-                >
-                    Answer 4
-                </button>
-                <h1>Dobrze: <span id="player-points">0</span></h1>
-                <h1>Źle: <span id="player-mistakes">0</span></h1>
+            <div class="container h-100" id="main-screen">
+                <div class="row justify-content-center">
+                    <div class="col-auto display-1 m-5" id="question">
+                        Question
+                    </div>
+                </div>
+                <div class="row justify-content-around m-4">
+                    <button
+                        type="button"
+                        class="answer-btn btn btn-primary btn-lg btn-block col-4"
+                    >
+                        Answer 1
+                    </button>
+                    <button
+                        type="button"
+                        class="answer-btn btn btn-primary btn-lg btn-block col-4"
+                    >
+                        Answer 2
+                    </button>
+                </div>
+                <div class="row justify-content-around m-4">
+                    <button
+                        type="button"
+                        class="answer-btn btn btn-primary btn-lg btn-block col-4"
+                    >
+                        Answer 3
+                    </button>
+                    <button
+                        type="button"
+                        class="answer-btn btn btn-primary btn-lg btn-block col-4"
+                    >
+                        Answer 4
+                    </button>
+                    <h1>Dobrze: <span id="player-points">0</span></h1>
+                    <h1>Źle: <span id="player-mistakes">0</span></h1>
+                </div>
+            </div>
+            <div class="container h-100" style="display: flex" id="end-screen">
+                <div class="row h-100 justify-content-center">
+                    <div class="col-6 h-25 text-center align-self-center">
+                        <h1 id="end-message">???</h1>
+                        <button class="btn btn-primary" id="end-btn">
+                            Try again :*
+                        </button>
+                    </div>
+                </div>
+                <!-- <div class="row">
+                    <div class="col">
+                        
+                    </div>
+                </div> -->
             </div>
         </div>
-
         <!-- Option 1: Bootstrap Bundle with Popper -->
         <script
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"

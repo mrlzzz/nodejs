@@ -1,7 +1,17 @@
-const BUTTONS = document.getElementsByClassName("btn");
+const BUTTONS = document.getElementsByClassName("answer-btn");
+
+const START_BUTTON = document.getElementById("start-btn");
+const END_BUTTON = document.getElementById("end-btn");
+
 const QUESTION_FIELD = document.getElementById("question");
 const POINTS = document.getElementById("player-points");
 const MISTAKES = document.getElementById("player-mistakes");
+
+const MAIN_SCREEN = document.getElementById("main-screen");
+const START_SCREEN = document.getElementById("start-screen");
+const END_SCREEN = document.getElementById("end-screen");
+
+const END_MESSAGE = document.getElementById("end-message");
 
 let db = {
     apple: "jablko",
@@ -68,17 +78,8 @@ let db = {
     besøge: "visit",
     betale: "pay",
 };
-/*  
-    Generate 4 "key" and 4 corresponding "pretendDB[key]"
-    Total of 8 words
 
-    "Question" => "key1"
-    "Answer 1" => "pretendDB[key1]"
-    "Answer 2" => "pretendDB[key2]"
-    "Answer 3" => "pretendDB[key3]"
-    "Answer 4" => "pretendDB[key4]"
-
-*/
+// Game logic
 
 function generateRandomKey() {
     const keysArray = Object.keys(db);
@@ -115,8 +116,11 @@ function generate(gameContent) {
     const randomKey = generateRandomKey();
     let unshuffledAnswers = [];
 
-    // Reset answers count
-    gameContent.answers = [];
+    /*  
+        Assign the question. RandomKey is a question, 
+        due to questions and answers being stores as an object, 
+        where keys relate to its values.
+    */
 
     gameContent.question = randomKey;
 
@@ -125,19 +129,22 @@ function generate(gameContent) {
     unshuffledAnswers.push(db[generateRandomKey()]);
     unshuffledAnswers.push(db[generateRandomKey()]);
 
+    /*
+        Removes previously "pushed" values and assigns shuffled answers.
+        Shuffling provides randomness to a positions of the corrent answer
+    */
+
+    gameContent.answers = [];
     gameContent.answers = shuffle(unshuffledAnswers);
 
     QUESTION_FIELD.textContent = gameContent.question;
 
-    // Assign possible values to answers
+    // Assign answers from the array to buttons
+
     let i = 0;
     for (const button of BUTTONS) {
         button.textContent = gameContent.answers[i++];
     }
-
-    // Assing the number of player points and mistakes
-    console.log(gameContent.playerPoints);
-    POINTS.textContent = gameContent.playerPoints;
 
     console.log(gameContent);
 
@@ -157,21 +164,78 @@ function checkAnswer(buttons, db, gameState) {
 
     for (const button of buttons) {
         button.addEventListener("click", function () {
-            console.log(button.textContent + " " + db[gameState.question]);
-
+            //console.log(button.textContent + " " + db[gameState.question]);
             if (button.textContent === db[gameState.question]) {
                 gameState.playerPoints++;
-                console.log(gameState);
+                POINTS.textContent = gameState.playerPoints;
+
+                if (gameState.playerPoints >= 10) {
+                    showScreen(END_SCREEN, "Brawo kurwa");
+                    gameState.playerMistakes = 0;
+                    gameState.playerPoints = 0;
+                    MISTAKES.textContent = gameState.playerMistakes;
+                    POINTS.textContent = gameState.playerMistakes;
+                }
+
                 generate(gameState);
             } else {
-                console.log("los");
                 gameState.playerMistakes++;
                 MISTAKES.textContent = gameState.playerMistakes;
+
+                if (gameState.playerMistakes >= 10) {
+                    showScreen(END_SCREEN, "Cipcius");
+                    gameState.playerMistakes = 0;
+                    gameState.playerPoints = 0;
+                    MISTAKES.textContent = gameState.playerMistakes;
+                    POINTS.textContent = gameState.playerMistakes;
+                }
             }
         });
     }
 
     return answer;
+}
+
+// Multiple screens logic
+
+function hideAllScreens() {
+    START_SCREEN.style.display = "none";
+    MAIN_SCREEN.style.display = "none";
+    END_SCREEN.style.display = "none";
+
+    // START_SCREEN.classList.add("fade-out");
+    // MAIN_SCREEN.classList.add("fade-out");
+
+    // setTimeout(() => {
+    //     START_SCREEN.style.display = "none";
+    //     MAIN_SCREEN.style.display = "none";
+
+    //     // Remove the fade-out class to prepare for the next screen
+    //     START_SCREEN.classList.remove("fade-out");
+    //     MAIN_SCREEN.classList.remove("fade-out");
+    // }, 300);
+}
+
+// Function to show the specified screen
+
+function showScreen(screen, message) {
+    hideAllScreens();
+    //START_SCREEN.style.display = "none";
+    if (screen == MAIN_SCREEN) screen.style.display = "block";
+    if (screen == START_SCREEN) screen.style.display = "flex";
+    if (screen == END_SCREEN) {
+        screen.style.display = "block";
+        END_MESSAGE.textContent = message;
+    }
+    // setTimeout(() => {
+    //     screen.style.display = "block";
+    //     screen.classList.add("fade-in");
+
+    //     setTimeout(() => {
+    //         // Remove the fade-in class to complete the transition
+    //         screen.classList.remove("fade-in");
+    //     }, 1000); // Adjust the duration to match your CSS transition duration
+    // }, 1000); // Delay the screen change to match your CSS transition duration
 }
 
 function main(db) {
@@ -184,7 +248,21 @@ function main(db) {
 
     let gameState = generate(initGameState);
 
-    checkAnswer(BUTTONS, db, gameState);
+    let check = checkAnswer(BUTTONS, db, gameState);
 }
 
-main(db);
+function startGame(db) {
+    hideAllScreens();
+    showScreen(START_SCREEN, null);
+    main(db);
+}
+
+START_BUTTON.addEventListener("click", function () {
+    showScreen(MAIN_SCREEN, null);
+});
+
+END_BUTTON.addEventListener("click", function () {
+    showScreen(MAIN_SCREEN, null);
+});
+
+startGame(db);
